@@ -16,9 +16,9 @@ const runQuery = (cohortName) => {
     JOIN assistance_requests ON assistance_requests.teacher_id = teachers.id
     JOIN students ON assistance_requests.student_id = students.id
     JOIN cohorts ON students.id = cohorts.id
-    WHERE cohorts.name = '${cohortName || 'JUL02'}'
+    WHERE cohorts.name = $1
     ORDER BY teachers.name;
-  `)
+  `, [`${cohortName || 'JUL02'}`])
   .then(res => {
     res.rows.forEach(row => {
       console.log(`${row.cohort}: ${row.teacher}`);

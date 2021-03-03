@@ -10,13 +10,14 @@ const pool = new Pool({
 pool.connect(()=>{console.log('connected')})
 
 const runQuery = (cohortName, numResults) => {
+  const limit = numResults || 5;
   pool.query(`
     SELECT students.id AS student_id, students.name AS name, cohorts.name AS cohort_name
     FROM students
     JOIN cohorts ON cohorts.id = students.cohort_id
-    WHERE cohorts.name LIKE '${cohortName}%'
-    LIMIT ${numResults || 5};
-  `)
+    WHERE cohorts.name LIKE $1
+    LIMIT $2;
+  `,[`${cohortName}%`, limit])
   .then(res => {
     console.log(res.rows);
   })
